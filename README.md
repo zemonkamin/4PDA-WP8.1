@@ -29,7 +29,4 @@
 </tr>
 </table>
 
-# Скриншоты:
-<img width=20% alt="wp_ss_20260517_0001" src="https://github.com/user-attachments/assets/410124c1-1948-4d84-b2e7-bf3d7bfd08ba" /><img width=20% alt="wp_ss_20260517_0002" src="https://github.com/user-attachments/assets/a72c93d2-9f6d-41f9-afca-fa9ee11760ee" /><img width=20% alt="wp_ss_20260517_0003" src="https://github.com/user-attachments/assets/75cb52e1-b485-43ee-9042-ac7a6036ed64" /><img width=20% alt="wp_ss_20260517_0004" src="https://github.com/user-attachments/assets/e47182ab-22e0-499c-82ec-aa7f0d20ee37" />
-
 # <a href="https://github.com/zemonkamin/4PDA-WP8.1/releases/latest">Последняя версия</a>
