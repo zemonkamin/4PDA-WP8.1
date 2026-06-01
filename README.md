@@ -20,6 +20,7 @@
     <td style="vertical-align: middle; padding-left: 12px; font-size: 16px;">
       zemonkamin
     </td>
+    <br>
     <td style="vertical-align: middle;">
       <img src="https://images-ext-1.discordapp.net/external/sQPNW-qttV-0o5OT0ekCD0My1k7mQ0yCecAhmQXtsko/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/730744368708714516/dd3d4557f7e77d65b019f7816db471a7.png?format=webp&quality=lossless&width=1702&height=1702" width=50px>
     </td>
