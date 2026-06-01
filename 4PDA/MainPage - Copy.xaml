@@ -1,0 +1,307 @@
+<Page
+    x:Class="_4PDA.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:_4PDA"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <Style x:Key="NoTiltListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="NewsItemTemplate">
+            <Grid Margin="12,10,12,12" HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Border
+                    Grid.Row="0"
+                    Margin="0,0,0,8"
+                    Background="#222222"
+                    HorizontalAlignment="Stretch"
+                    Visibility="{Binding ImageVisibility}">
+                    <Image
+                        Source="{Binding Image}"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top" />
+                </Border>
+
+                <TextBlock
+                    Grid.Row="1"
+                    Text="{Binding Title}"
+                    FontSize="22"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    Grid.Row="2"
+                    Text="{Binding Info}"
+                    FontSize="14"
+                    Opacity="0.65"
+                    Margin="0,4,0,0"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    Grid.Row="3"
+                    Text="{Binding Description}"
+                    FontSize="16"
+                    Opacity="0.82"
+                    Margin="0,6,0,0"
+                    TextWrapping="Wrap"
+                    MaxLines="3" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ForumNodeTemplate">
+            <Grid MinHeight="56" Margin="0" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="36" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.ColumnSpan="3"
+                    Margin="0,0,12,0"
+                    BorderBrush="#22FFFFFF"
+                    BorderThickness="0,0,0,1" />
+
+                <Border
+                    Grid.Column="0"
+                    Width="{Binding IndentWidth}" />
+
+                <Border
+                    Grid.Column="1"
+                    Background="Transparent"
+                    Tag="{Binding}"
+                    Tapped="ForumArrow_Tapped">
+                    <TextBlock
+                        Text="{Binding ExpandButtonText}"
+                        FontFamily="Segoe UI Symbol"
+                        FontSize="22"
+                        Opacity="{Binding ExpandButtonOpacity}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Border>
+
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="0,8,12,8"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Text="{Binding Title}"
+                        FontSize="{Binding TitleFontSize}"
+                        Opacity="{Binding TitleOpacity}"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        Text="{Binding Description}"
+                        Visibility="{Binding DescriptionVisibility}"
+                        FontSize="14"
+                        Opacity="0.56"
+                        Margin="0,2,0,0"
+                        TextWrapping="Wrap"
+                        MaxLines="2" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="QmsNodeTemplate">
+            <Grid MinHeight="64" Margin="{Binding RowMargin}" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="36" />
+                    <ColumnDefinition Width="52" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.ColumnSpan="4"
+                    Margin="0,0,12,0"
+                    BorderBrush="#22FFFFFF"
+                    BorderThickness="0,0,0,1" />
+
+                <Border
+                    Grid.Column="0"
+                    Background="Transparent"
+                    Tag="{Binding}"
+                    Tapped="QmsArrow_Tapped">
+                    <TextBlock
+                        Text="{Binding ExpandButtonText}"
+                        FontFamily="Segoe UI Symbol"
+                        FontSize="22"
+                        Opacity="{Binding ExpandButtonOpacity}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Border>
+
+                <Grid Grid.Column="1" Width="44" Height="44" Margin="0,10,8,10">
+                    <Border Background="#3355A8FF" CornerRadius="4" />
+                    <Image
+                        Source="{Binding AvatarImage}"
+                        Stretch="UniformToFill"
+                        Visibility="{Binding AvatarVisibility}" />
+                    <TextBlock
+                        Text="{Binding IconText}"
+                        FontFamily="Segoe UI Symbol"
+                        FontSize="22"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Opacity="0.92" />
+                </Grid>
+
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="0,8,8,8"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Text="{Binding Title}"
+                        FontSize="{Binding TitleFontSize}"
+                        TextWrapping="NoWrap"
+                        TextTrimming="WordEllipsis" />
+
+                    <TextBlock
+                        Text="{Binding Subtitle}"
+                        FontSize="14"
+                        Opacity="0.62"
+                        Margin="0,2,0,0"
+                        TextWrapping="NoWrap"
+                        TextTrimming="WordEllipsis" />
+                </StackPanel>
+
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="MainCommandBar">
+            <AppBarButton
+                x:Name="AccountAppBarButton"
+                Icon="Contact"
+                Label="аккаунт"
+                Click="AccountAppBarButton_Click" />
+
+            <AppBarButton
+                x:Name="SearchAppBarButton"
+                Icon="Find"
+                Label="поиск"
+                IsEnabled="False" />
+
+            <AppBarButton
+                x:Name="RefreshAppBarButton"
+                Icon="Refresh"
+                Label="обновить"
+                Click="RefreshAppBarButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="12,8,12,0" Height="58">
+            <Image
+                Source="Assets/4pda_logo.png"
+                Height="42"
+                Width="160"
+                Stretch="Uniform"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center" />
+        </Grid>
+
+        <Pivot x:Name="MainPivot" Grid.Row="1" SelectionChanged="MainPivot_SelectionChanged">
+            <PivotItem Header="новости">
+                <Grid>
+                    <ListView
+                        x:Name="NewsListView"
+                        ItemTemplate="{StaticResource NewsItemTemplate}"
+                        ItemContainerStyle="{StaticResource NoTiltListViewItemStyle}"
+                        IsItemClickEnabled="True"
+                        ItemClick="NewsListView_ItemClick"
+                        SelectionMode="None">
+</ListView>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem Header="форум">
+                <Grid>
+                    <ListView
+                        x:Name="ForumListView"
+                        ItemTemplate="{StaticResource ForumNodeTemplate}"
+                        ItemContainerStyle="{StaticResource NoTiltListViewItemStyle}"
+                        IsItemClickEnabled="True"
+                        ItemClick="ForumListView_ItemClick"
+                        SelectionMode="None">
+</ListView>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem Header="сообщения">
+                <Grid>
+                    <ListView
+                        x:Name="QmsListView"
+                        ItemTemplate="{StaticResource QmsNodeTemplate}"
+                        ItemContainerStyle="{StaticResource NoTiltListViewItemStyle}"
+                        IsItemClickEnabled="True"
+                        ItemClick="QmsListView_ItemClick"
+                        SelectionMode="None">
+</ListView>
+
+                    <ProgressRing
+                        x:Name="QmsProgressRing"
+                        Width="60"
+                        Height="60"
+                        IsActive="False"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+
+                    <TextBlock
+                        x:Name="QmsEmptyTextBlock"
+                        Text="Войдите в аккаунт, чтобы открыть QMS."
+                        FontSize="18"
+                        Opacity="0.68"
+                        TextWrapping="Wrap"
+                        Visibility="Collapsed"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="24" />
+                </Grid>
+            </PivotItem>
+        </Pivot>
+
+        <TextBlock
+            x:Name="StatusTextBlock"
+            Grid.Row="2"
+            Margin="12,6,12,10"
+            FontSize="14"
+            Opacity="0.70"
+            TextWrapping="Wrap" />
+    </Grid>
+</Page>

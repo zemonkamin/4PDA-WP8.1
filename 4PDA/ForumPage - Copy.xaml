@@ -1,0 +1,189 @@
+﻿<Page
+    x:Class="_4PDA.ForumPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:_4PDA"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="#000000">
+
+    <Page.Resources>
+        <Style x:Key="NoTiltListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ForumPageButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="42" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Margin" Value="0,0,6,6" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#F2F2F2" />
+            <Setter Property="Background" Value="#223A5A" />
+            <Setter Property="BorderBrush" Value="#446A9A" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <DataTemplate x:Key="ForumListItemTemplate">
+            <Grid MinHeight="72" Margin="0" Background="#000000">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.ColumnSpan="3"
+                    Margin="12,0,12,0"
+                    BorderBrush="#22FFFFFF"
+                    BorderThickness="0,0,0,1" />
+
+                <Border
+                    Grid.Column="1"
+                    Width="4"
+                    Margin="0,12,0,12"
+                    Background="#0078D7" />
+
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="12,9,12,10"
+                    VerticalAlignment="Center">
+
+                    <TextBlock
+                        Text="{Binding TypeLabel}"
+                        FontSize="12"
+                        Foreground="#8E8E8E"
+                        TextWrapping="NoWrap"
+                        TextTrimming="WordEllipsis" />
+
+                    <TextBlock
+                        Text="{Binding Title}"
+                        FontSize="22"
+                        Foreground="#F2F2F2"
+                        TextWrapping="Wrap"
+                        LineHeight="25"
+                        Margin="0,1,0,0" />
+
+                    <TextBlock
+                        Text="{Binding Info}"
+                        Visibility="{Binding InfoVisibility}"
+                        FontSize="14"
+                        Foreground="#9E9E9E"
+                        Margin="0,4,0,0"
+                        TextWrapping="Wrap"
+                        LineHeight="18"
+                        MaxLines="3" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PageButtonTemplate">
+            <Button
+                Style="{StaticResource ForumPageButtonStyle}"
+                Content="{Binding Label}"
+                IsEnabled="{Binding IsEnabled}"
+                Click="PageButton_Click" />
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="ForumCommandBar">
+            <AppBarButton
+                x:Name="RefreshAppBarButton"
+                Icon="Refresh"
+                Label="обновить"
+                Click="RefreshAppBarButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="#000000">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Верх как в MainPage.xaml -->
+        <Grid Grid.Row="0" Margin="12,8,12,0" Height="58">
+            <Image
+                Source="Assets/4pda_logo.png"
+                Height="42"
+                Width="160"
+                Stretch="Uniform"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="1" Background="#000000">
+            <ListView
+                x:Name="ForumItemsListView"
+                ItemTemplate="{StaticResource ForumListItemTemplate}"
+                IsItemClickEnabled="True"
+                ItemClick="ForumItemsListView_ItemClick"
+                SelectionMode="None"
+                ItemContainerStyle="{StaticResource NoTiltListViewItemStyle}"
+                Background="#000000">
+
+                <ListView.Footer>
+                    <StackPanel Margin="12,8,12,28" Background="#000000">
+                        <StackPanel
+                            x:Name="PageNavigationPanel"
+                            Visibility="Collapsed"
+                            Background="#000000">
+
+                            <TextBlock
+                                Text="Страницы"
+                                FontSize="14"
+                                Foreground="#8E8E8E"
+                                Margin="0,0,0,8" />
+
+                            <ItemsControl
+                                x:Name="PagesItemsControl"
+                                ItemTemplate="{StaticResource PageButtonTemplate}">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </ListView.Footer>
+            </ListView>
+
+            <ProgressRing
+                x:Name="ForumProgressRing"
+                Width="60"
+                Height="60"
+                IsActive="False"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+        </Grid>
+
+        <TextBlock
+            x:Name="StatusTextBlock"
+            Grid.Row="2"
+            Margin="12,6,12,10"
+            FontSize="14"
+            Foreground="#8E8E8E"
+            TextWrapping="Wrap" />
+    </Grid>
+</Page>

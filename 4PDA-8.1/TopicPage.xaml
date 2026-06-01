@@ -1,0 +1,627 @@
+﻿<Page
+    x:Class="_4PDA.TopicPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:_4PDA"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="ForumAccentBrush" Color="#008EE8" />
+        <SolidColorBrush x:Key="ForumPostHeaderBrush" Color="#181818" />
+        <SolidColorBrush x:Key="ForumPostBodyBrush" Color="#050505" />
+        <SolidColorBrush x:Key="ForumQuoteBrush" Color="#101820" />
+        <SolidColorBrush x:Key="ForumLineBrush" Color="#22FFFFFF" />
+        <SolidColorBrush x:Key="ForumStrongLineBrush" Color="#44FFFFFF" />
+        <SolidColorBrush x:Key="ForumTextBrush" Color="#F2F2F2" />
+        <SolidColorBrush x:Key="ForumSubTextBrush" Color="#8E8E8E" />
+
+        <Style x:Key="NoTiltListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SmallForumButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="54" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="9,0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#F2F2F2" />
+            <Setter Property="BorderBrush" Value="#33FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="BlueForumButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Background" Value="#008EE8" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#008EE8" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <DataTemplate x:Key="TopicChildContentTemplate">
+            <Grid Margin="0,6,0,0">
+                <RichTextBlock
+                    FontSize="16"
+                    LineHeight="21"
+                    Foreground="{StaticResource ForumTextBrush}"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding TextVisibility}"
+                    Loaded="RichTextBlock_Loaded" />
+
+                <Border
+                    Visibility="{Binding QuoteVisibility}"
+                    Background="{StaticResource ForumQuoteBrush}"
+                    BorderBrush="{StaticResource ForumLineBrush}"
+                    BorderThickness="1">
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Background="{StaticResource ForumAccentBrush}" />
+
+                        <StackPanel Grid.Column="1" Margin="8,7,8,8">
+                            <TextBlock
+                                Text="{Binding Header}"
+                                FontSize="13"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource ForumSubTextBrush}"
+                                TextWrapping="Wrap" />
+
+                            <RichTextBlock
+                                FontSize="16"
+                                LineHeight="21"
+                                Foreground="{StaticResource ForumTextBrush}"
+                                TextWrapping="Wrap"
+                                Margin="0,5,0,0"
+                                Loaded="RichTextBlock_Loaded" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border
+                    Visibility="{Binding ImageVisibility}"
+                    Background="#111111"
+                    BorderBrush="{StaticResource ForumLineBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Left"
+                    Tapped="MediaImage_Tapped">
+
+                    <Image
+                        Source="{Binding ImageUrl}"
+                        Stretch="Uniform"
+                        MaxWidth="330"
+                        MaxHeight="420"
+                        HorizontalAlignment="Left" />
+                </Border>
+
+                <Border
+                    Visibility="{Binding FileVisibility}"
+                    Background="#111111"
+                    BorderBrush="{StaticResource ForumLineBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Stretch">
+
+                    <Grid Margin="8,7,8,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            Grid.Column="0"
+                            Source="{Binding FileIconUrl}"
+                            Width="22"
+                            Height="22"
+                            Stretch="Uniform"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding FileTitle}"
+                            FontSize="15"
+                            Foreground="{StaticResource ForumTextBrush}"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Center" />
+
+                        <Button
+                            Grid.Column="2"
+                            Content="скачать"
+                            Style="{StaticResource BlueForumButtonStyle}"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Click="FileButton_Click" />
+                    </Grid>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TopicContentTemplate">
+            <Grid Margin="0,7,0,0">
+                <RichTextBlock
+                    FontSize="18"
+                    LineHeight="24"
+                    Foreground="{StaticResource ForumTextBrush}"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding TextVisibility}"
+                    Loaded="RichTextBlock_Loaded" />
+
+                <Border
+                    Visibility="{Binding QuoteVisibility}"
+                    Background="{StaticResource ForumQuoteBrush}"
+                    BorderBrush="{StaticResource ForumLineBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Stretch">
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Background="{StaticResource ForumAccentBrush}" />
+
+                        <StackPanel Grid.Column="1" Margin="9,8,9,9">
+                            <TextBlock
+                                Text="{Binding Header}"
+                                FontSize="13"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource ForumSubTextBrush}"
+                                TextWrapping="Wrap" />
+
+                            <RichTextBlock
+                                FontSize="17"
+                                LineHeight="23"
+                                Foreground="{StaticResource ForumTextBrush}"
+                                TextWrapping="Wrap"
+                                Margin="0,5,0,0"
+                                Loaded="RichTextBlock_Loaded" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <StackPanel
+                    Visibility="{Binding ImageVisibility}"
+                    HorizontalAlignment="Left">
+
+                    <Border
+                        Background="#111111"
+                        BorderBrush="{StaticResource ForumLineBrush}"
+                        BorderThickness="1"
+                        HorizontalAlignment="Left"
+                        Tapped="MediaImage_Tapped">
+
+                        <Image
+                            Source="{Binding ImageUrl}"
+                            Stretch="Uniform"
+                            MaxWidth="330"
+                            MaxHeight="420"
+                            HorizontalAlignment="Left" />
+                    </Border>
+
+                    <TextBlock
+                        Text="{Binding FileTitle}"
+                        FontSize="12"
+                        Foreground="{StaticResource ForumSubTextBrush}"
+                        TextWrapping="Wrap"
+                        Margin="0,3,0,0"
+                        Visibility="{Binding CaptionVisibility}" />
+                </StackPanel>
+
+                <Border
+                    Visibility="{Binding FileVisibility}"
+                    Background="#111111"
+                    BorderBrush="{StaticResource ForumLineBrush}"
+                    BorderThickness="1"
+                    HorizontalAlignment="Stretch">
+
+                    <Grid Margin="8,7,8,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            Grid.Column="0"
+                            Source="{Binding FileIconUrl}"
+                            Width="22"
+                            Height="22"
+                            Stretch="Uniform"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding FileTitle}"
+                            FontSize="16"
+                            Foreground="{StaticResource ForumTextBrush}"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Center" />
+
+                        <Button
+                            Grid.Column="2"
+                            Content="скачать"
+                            Style="{StaticResource BlueForumButtonStyle}"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Click="FileButton_Click" />
+                    </Grid>
+                </Border>
+
+                <StackPanel
+                    Visibility="{Binding SpoilerVisibility}"
+                    HorizontalAlignment="Stretch">
+
+                    <Button
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Padding="0"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        Click="SpoilerButton_Click">
+
+                        <Button.Content>
+                            <Grid Background="#141414" HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="4" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Background="{StaticResource ForumAccentBrush}" />
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding ButtonText}"
+                                    FontSize="14"
+                                    FontWeight="SemiBold"
+                                    Foreground="{StaticResource ForumTextBrush}"
+                                    TextWrapping="Wrap"
+                                    Margin="9,8,9,8" />
+
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Text="+"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Foreground="{StaticResource ForumAccentBrush}"
+                                    Margin="0,8,10,8" />
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    <Border
+                        Background="#080808"
+                        BorderBrush="{StaticResource ForumLineBrush}"
+                        BorderThickness="1,0,1,1"
+                        Visibility="{Binding ExpandedVisibility}">
+
+                        <ItemsControl
+                            ItemsSource="{Binding Children}"
+                            ItemTemplate="{StaticResource TopicChildContentTemplate}"
+                            Margin="10,6,10,10" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PageButtonTemplate">
+            <Button
+                MinWidth="56"
+                Height="42"
+                Margin="4,0,4,0"
+                Padding="8,0"
+                Content="{Binding Text}"
+                IsEnabled="{Binding IsEnabled}"
+                Click="PageButton_Click" />
+        </DataTemplate>
+
+        <!-- Только сообщения сделаны под HTML 4PDA -->
+        <DataTemplate x:Key="PostTemplate">
+            <Grid Margin="12,10,12,14">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- post_header из HTML -->
+                <Border
+                    Grid.Row="0"
+                    Background="{StaticResource ForumPostHeaderBrush}"
+                    BorderBrush="{StaticResource ForumStrongLineBrush}"
+                    BorderThickness="0,0,0,1">
+
+                    <Grid Margin="9,7,9,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock
+                                Text="{Binding Date}"
+                                FontSize="13"
+                                Foreground="{StaticResource ForumSubTextBrush}"
+                                TextWrapping="Wrap" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock
+                                    Text="●"
+                                    FontSize="13"
+                                    Foreground="#FF3333"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,6,0" />
+
+                                <HyperlinkButton
+                                    Content="{Binding Author}"
+                                    FontSize="20"
+                                    Foreground="{StaticResource ForumTextBrush}"
+                                    Padding="0"
+                                    HorizontalAlignment="Left"
+                                    IsEnabled="{Binding HasAuthorProfile}"
+                                    Click="AuthorButton_Click" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding NumberText}"
+                            FontSize="13"
+                            Foreground="{StaticResource ForumAccentBrush}"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Top" />
+                    </Grid>
+                </Border>
+
+                <!-- post_body из HTML, но без сайта вокруг -->
+                <Border
+                    Grid.Row="1"
+                    Background="{StaticResource ForumPostBodyBrush}"
+                    BorderBrush="{StaticResource ForumLineBrush}"
+                    BorderThickness="0,0,0,1">
+
+                    <StackPanel Margin="9,9,9,11">
+                        <ItemsControl
+                            ItemsSource="{Binding Parts}"
+                            ItemTemplate="{StaticResource TopicContentTemplate}" />
+
+                        <TextBlock
+                            Text="{Binding EditedText}"
+                            FontSize="13"
+                            Foreground="{StaticResource ForumSubTextBrush}"
+                            TextWrapping="Wrap"
+                            Margin="0,10,0,0"
+                            Visibility="{Binding EditedVisibility}" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,11,0,0">
+                            <Button
+                                Content="цитировать"
+                                Style="{StaticResource SmallForumButtonStyle}"
+                                Click="QuotePostButton_Click" />
+
+                            <Button
+                                Content="+"
+                                Tag="add"
+                                Style="{StaticResource SmallForumButtonStyle}"
+                                MinWidth="38"
+                                Margin="8,0,0,0"
+                                Visibility="{Binding ReputationVisibility}"
+                                Click="ReputationButton_Click" />
+
+                            <Button
+                                Content="-"
+                                Tag="minus"
+                                Style="{StaticResource SmallForumButtonStyle}"
+                                MinWidth="38"
+                                Margin="8,0,0,0"
+                                Visibility="{Binding ReputationVisibility}"
+                                Click="ReputationButton_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="TopicCommandBar">
+            <AppBarButton
+                x:Name="RefreshAppBarButton"
+                Icon="Refresh"
+                Label="обновить"
+                Click="RefreshAppBarButton_Click" />
+
+            <AppBarButton
+                x:Name="SendAppBarButton"
+                Icon="Comment"
+                Label="ответить"
+                Click="SendAppBarButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#FF111111" BorderBrush="#22FFFFFF" BorderThickness="0,0,0,1" Padding="12,8,16,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Grid.Column="0"
+                    Content="←"
+                    Width="46"
+                    MinHeight="42"
+                    Margin="0,0,12,0"
+                    VerticalAlignment="Top"
+                    Click="BackButton_Click" />
+
+                <StackPanel Grid.Column="1">
+                    <Image
+                        Source="Assets/4pda_logo.png"
+                        Height="42"
+                        Width="160"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left" />
+
+                    <TextBlock
+                        x:Name="TitleTextBlock"
+                        Text=""
+                        FontSize="30"
+                        TextWrapping="Wrap"
+                        Margin="0,4,0,0" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <ListView
+                x:Name="PostsListView"
+                ItemTemplate="{StaticResource PostTemplate}"
+                ItemContainerStyle="{StaticResource NoTiltListViewItemStyle}"
+                SelectionMode="None"
+                IsSwipeEnabled="False"
+                IsItemClickEnabled="False">
+
+                <ListView.Footer>
+                    <StackPanel Margin="12,8,12,24">
+                        <StackPanel x:Name="PageNavigationPanel">
+                            <TextBlock
+                                Text=""
+                                FontSize="13"
+                                Opacity="0.58"
+                                Margin="0,0,0,6" />
+
+                            <ItemsControl
+                                x:Name="PagesItemsControl"
+                                ItemTemplate="{StaticResource PageButtonTemplate}"
+                                HorizontalAlignment="Center">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <StackPanel
+                            x:Name="ReplyPanel"
+                            Margin="0,12,0,0"
+                            Visibility="Collapsed">
+
+                            <TextBox
+                                x:Name="ReplyTextBox"
+                                MinHeight="110"
+                                AcceptsReturn="True"
+                                TextWrapping="Wrap"
+                                PlaceholderText="написать комментарий" />
+
+                            <Button
+                                x:Name="SendReplyButton"
+                                Content="отправить"
+                                HorizontalAlignment="Right"
+                                Margin="0,8,0,0"
+                                Click="SendReplyButton_Click" />
+                        </StackPanel>
+
+                        <TextBlock
+                            x:Name="StatusTextBlock"
+                            Margin="0,8,0,0"
+                            FontSize="14"
+                            Opacity="0.70"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </ListView.Footer>
+            </ListView>
+
+            <ProgressRing
+                x:Name="TopicProgressRing"
+                Width="60"
+                Height="60"
+                IsActive="False"
+                Visibility="Collapsed"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid
+            x:Name="DownloadOverlay"
+            Grid.RowSpan="2"
+            Canvas.ZIndex="1000"
+            Background="#66000000"
+            Visibility="Collapsed"
+            IsHitTestVisible="True">
+
+            <Border
+                Width="340"
+                MaxWidth="340"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="#FF1C1C1C"
+                BorderBrush="#44FFFFFF"
+                BorderThickness="1">
+
+                <StackPanel Margin="20">
+                    <TextBlock
+                        x:Name="DownloadTitleTextBlock"
+                        Text="Загрузка файла"
+                        FontSize="22"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        HorizontalAlignment="Center" />
+
+                    <ProgressBar
+                        x:Name="DownloadProgressBar"
+                        Minimum="0"
+                        Maximum="100"
+                        Height="10"
+                        Margin="0,16,0,0" />
+
+                    <TextBlock
+                        x:Name="DownloadProgressTextBlock"
+                        Text=""
+                        FontSize="15"
+                        Foreground="White"
+                        TextAlignment="Center"
+                        TextWrapping="WrapWholeWords"
+                        Margin="0,12,0,0" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,253 @@
+﻿<Page
+    x:Class="_4PDA.UserPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:_4PDA"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="ProfileRowTemplate">
+            <Grid Margin="0,8,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="152" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Column="0"
+                    Text="{Binding Title}"
+                    FontSize="15"
+                    Opacity="0.62"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    Grid.Column="1"
+                    Text="{Binding Value}"
+                    FontSize="18"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DeviceRowTemplate">
+            <StackPanel Margin="0,8,0,10">
+                <TextBlock
+                    Text="{Binding Name}"
+                    FontSize="21"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    Text="{Binding Accessory}"
+                    FontSize="15"
+                    Opacity="0.68"
+                    TextWrapping="Wrap"
+                    Margin="0,2,0,0" />
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton
+                Icon="Refresh"
+                Label="обновить"
+                Click="RefreshAppBarButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="24,18,24,92" MaxWidth="760" HorizontalAlignment="Left">
+                <Grid Margin="0,0,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Grid.Column="0"
+                        Content="←"
+                        Width="46"
+                        MinHeight="42"
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Center"
+                        Click="BackButton_Click" />
+
+                    <Image
+                        Grid.Column="1"
+                        Source="Assets/4pda_logo.png"
+                        Height="42"
+                        Width="160"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
+                </Grid>
+
+                <TextBlock
+                    x:Name="ProfileTitleTextBlock"
+                    Text="профиль"
+                    FontSize="42"
+                    Margin="0,0,0,18" />
+
+                <Border
+                    Padding="0"
+                    Margin="0,0,0,18">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            Width="82"
+                            Height="82"
+                            Background="#26000000"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                            <Image
+                                x:Name="AvatarImage"
+                                Stretch="UniformToFill" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                            <TextBlock
+                                x:Name="NickTextBlock"
+                                Text="гость"
+                                FontSize="30"
+                                TextWrapping="Wrap" />
+
+                            <TextBlock
+                                x:Name="GroupTextBlock"
+                                FontSize="18"
+                                Opacity="0.82"
+                                TextWrapping="Wrap"
+                                Margin="0,2,0,0" />
+
+                            <TextBlock
+                                x:Name="IdTextBlock"
+                                FontSize="15"
+                                Opacity="0.65"
+                                TextWrapping="Wrap"
+                                Margin="0,4,0,0" />
+
+                            <TextBlock
+                                x:Name="StatusTextBlock"
+                                FontSize="15"
+                                Opacity="0.78"
+                                TextWrapping="Wrap"
+                                Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <ProgressRing
+                    x:Name="ProfileProgressRing"
+                    Width="54"
+                    Height="54"
+                    IsActive="False"
+                    HorizontalAlignment="Center"
+                    Margin="0,6,0,14" />
+
+                <TextBlock
+                    Text="информация"
+                    FontSize="26"
+                    Margin="0,0,0,6" />
+
+                <ItemsControl
+                    x:Name="ProfileRowsItemsControl"
+                    ItemTemplate="{StaticResource ProfileRowTemplate}" />
+
+                <TextBlock
+                    x:Name="DevicesTitleTextBlock"
+                    Text="устройства"
+                    FontSize="26"
+                    Margin="0,22,0,6"
+                    Visibility="Collapsed" />
+
+                <ItemsControl
+                    x:Name="DeviceRowsItemsControl"
+                    ItemTemplate="{StaticResource DeviceRowTemplate}"
+                    Visibility="Collapsed" />
+
+                <Border
+                    x:Name="NoteBorder"
+                    Padding="16"
+                    BorderBrush="#3DFFFFFF"
+                    BorderThickness="1"
+                    Margin="0,22,0,0">
+                    <StackPanel>
+                        <TextBlock
+                            Text="заметка"
+                            FontSize="26"
+                            Margin="0,0,0,8" />
+
+                        <TextBox
+                            x:Name="NoteTextBox"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            MinHeight="118"
+                            PlaceholderText="личная заметка"
+                            Margin="0,0,0,12" />
+
+                        <Button
+                            x:Name="SaveNoteButton"
+                            Content="сохранить заметку"
+                            HorizontalAlignment="Stretch"
+                            Click="SaveNoteButton_Click" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock
+                    x:Name="ActionsTitleTextBlock"
+                    Text="действия"
+                    FontSize="26"
+                    Margin="0,22,0,10" />
+
+                <Grid x:Name="ActionsGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Button
+                        x:Name="MessagesButton"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Content="сообщения"
+                        IsEnabled="True"
+                        Click="MessagesButton_Click"
+                        Margin="0,0,6,8" />
+
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Content="темы"
+                        IsEnabled="False"
+                        Margin="6,0,0,8" />
+
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Content="QMS"
+                        IsEnabled="False"
+                        Margin="0,0,6,0" />
+
+                </Grid>
+
+                <TextBlock
+                    x:Name="PageStatusTextBlock"
+                    FontSize="15"
+                    Opacity="0.74"
+                    TextWrapping="Wrap"
+                    Margin="0,18,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,157 @@
+﻿<Page
+    x:Class="_4PDA.ForumPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:_4PDA"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <Style x:Key="NoTiltListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="ForumListItemTemplate">
+            <Grid Margin="12,8,12,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Rectangle
+                    Grid.Column="0"
+                    Fill="#0078D7"
+                    VerticalAlignment="Stretch" />
+
+                <StackPanel Grid.Column="2" Margin="0,0,0,2">
+                    <TextBlock
+                        Text="{Binding TypeLabel}"
+                        FontSize="12"
+                        Opacity="0.50"
+                        TextWrapping="NoWrap" />
+
+                    <TextBlock
+                        Text="{Binding Title}"
+                        FontSize="22"
+                        Opacity="0.96"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        Text="{Binding Info}"
+                        Visibility="{Binding InfoVisibility}"
+                        FontSize="14"
+                        Opacity="0.62"
+                        Margin="0,3,0,0"
+                        TextWrapping="Wrap"
+                        MaxLines="3" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PageButtonTemplate">
+            <Button
+                MinWidth="44"
+                Height="40"
+                Margin="0,0,6,6"
+                Padding="8,0"
+                Content="{Binding Label}"
+                IsEnabled="{Binding IsEnabled}"
+                Click="PageButton_Click" />
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="ForumCommandBar">
+            <AppBarButton
+                x:Name="RefreshAppBarButton"
+                Icon="Refresh"
+                Label="обновить"
+                Click="RefreshAppBarButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="12,8,12,4">
+            <Image
+                Source="Assets/4pda_logo.png"
+                Height="42"
+                Width="160"
+                Stretch="Uniform"
+                HorizontalAlignment="Left" />
+
+
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <ListView
+                x:Name="ForumItemsListView"
+                ItemTemplate="{StaticResource ForumListItemTemplate}"
+                IsItemClickEnabled="True"
+                ItemClick="ForumItemsListView_ItemClick"
+                SelectionMode="None"
+                ItemContainerStyle="{StaticResource NoTiltListViewItemStyle}">
+                <ListView.Footer>
+                    <StackPanel Margin="12,8,12,24">
+                        <StackPanel x:Name="PageNavigationPanel" Visibility="Collapsed">
+                            <TextBlock
+                                Text=""
+                                FontSize="13"
+                                Opacity="0.58"
+                                Margin="0,0,0,6" />
+                            <ItemsControl
+                                x:Name="PagesItemsControl"
+                                ItemTemplate="{StaticResource PageButtonTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </ListView.Footer>
+            </ListView>
+
+            <ProgressRing
+                x:Name="ForumProgressRing"
+                Width="60"
+                Height="60"
+                IsActive="False"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+        </Grid>
+
+        <TextBlock
+            x:Name="StatusTextBlock"
+            Grid.Row="2"
+            Margin="12,6,12,10"
+            FontSize="14"
+            Opacity="0.70"
+            TextWrapping="Wrap" />
+    </Grid>
+</Page>
